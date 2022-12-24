@@ -7,6 +7,7 @@ function Home() {
 
   const [positions, setPositions] = useState<(number | undefined)[]>([])
   const [knight, Setknight] = useState<number>(58)
+  const[select, Setselect]=useState<string>("")
 
   const possiblePosition = (value: number) => {
 
@@ -23,7 +24,6 @@ function Home() {
     const b = rowind - 1 < 0 || rowind - 1 > 7 ? undefined : rowind - 1
     const c = rowind + 2 < 0 || rowind + 2 > 7 ? undefined : rowind + 2
     const d = rowind + 1 < 0 || rowind + 1 > 7 ? undefined : rowind + 1
-    console.log(a, b, c, d)
 
     setPositions([
       a !== undefined ? board[rowind - 2][ind - 1] : undefined,
@@ -40,11 +40,14 @@ function Home() {
   const handleClick = (value: number) => {
     if (value === knight) {
       possiblePosition(value)
+      Setselect("select")
     } else if (positions.includes(value)) {
       Setknight(value)
       setPositions([])
+      Setselect("")
     } else {
       setPositions([])
+      Setselect("")
     }
   }
 
@@ -53,10 +56,8 @@ function Home() {
       <div className="board">
         {chess.map((item, index) => {
           return (
-            <div onClick={() => handleClick(item)} key={index} className={`${colors[index]} ${positions.includes(item) && "positions"}`}>
-              <div style={{ "display": "grid", "justifyItems": "center", "alignItems": "center", "height": "100%" }}>
-                <img className="knight" src={`${item === knight && require("./knight.png")}`} alt="" />
-              </div>
+            <div style={{"position":"relative"}} onClick={() => handleClick(item)} key={index} className={`${colors[index]} ${positions.includes(item) && "positions"} ${item===knight&&select}`}>
+              {item===knight&&<img className="knight" src={require("./knight.png")} alt="" />}
             </div>
           )
         })}
